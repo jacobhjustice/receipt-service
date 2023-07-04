@@ -3,7 +3,7 @@ using Receipt.Models.Data;
 
 namespace Receipt.Models.Storage.Repositories;
 
-public abstract class BaseRepository<TModel> where TModel :  class, IDataModel
+public abstract class BaseRepository<TModel> : IRepository<TModel> where TModel :  class, IDataModel
 {
     private readonly DbContext _context;
     protected DbSet<TModel> Set => this._context.Set<TModel>();

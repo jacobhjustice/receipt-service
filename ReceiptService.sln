@@ -10,6 +10,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Receipt.Models.Storage", "R
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Receipt.Models.Storage.Tests", "Receipt.Models.Storage.Tests\Receipt.Models.Storage.Tests.csproj", "{698F6105-85A8-4897-9896-EDDD6E978E2D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Receipt.API.Logic", "Receipt.API.Logic\Receipt.API.Logic.csproj", "{EB5120E7-0A1F-4745-98E5-E8E9FF640964}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,5 +38,9 @@ Global
 		{698F6105-85A8-4897-9896-EDDD6E978E2D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{698F6105-85A8-4897-9896-EDDD6E978E2D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{698F6105-85A8-4897-9896-EDDD6E978E2D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EB5120E7-0A1F-4745-98E5-E8E9FF640964}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB5120E7-0A1F-4745-98E5-E8E9FF640964}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EB5120E7-0A1F-4745-98E5-E8E9FF640964}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EB5120E7-0A1F-4745-98E5-E8E9FF640964}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
