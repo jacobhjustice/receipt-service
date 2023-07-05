@@ -9,4 +9,4 @@ The following assumptions were made from the requirements:
 - All requests to the API are assumed to have admin-level permission with access to all data
 - User data is not tracked in any form
 - The API does not handle any authentication or authorization
-
+- This solution does not compose multiple microservices, but rather a single receipt service that would potentially be a part of a larger system 

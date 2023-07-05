@@ -47,7 +47,6 @@ public abstract class BaseRepositoryTests<TModel> where TModel : class, IDataMod
     public void TestAdd()
     {
         var ctx = this.SetupContext();
-        var repository = this._repository(ctx);
         this._repository(ctx).Add(this.TestData(Guid.NewGuid()));
         Assert.Equal(1, ctx.Set<TModel>().Count());
     }

@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+
 namespace Receipt.Models.Storage.Repositories;
 
 public class ReceiptRepository : BaseRepository<Data.Receipt>
