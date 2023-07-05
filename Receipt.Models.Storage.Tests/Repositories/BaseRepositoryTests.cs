@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using Receipt.Models.Data;
 using Receipt.Models.Storage.Repositories;
 using Xunit;
@@ -8,7 +9,7 @@ namespace Receipt.Models.Storage.Tests.Repositories;
 public abstract class BaseRepositoryTests<TModel> where TModel : class, IDataModel, new()
 {
     protected abstract BaseRepository<TModel> _repository(ReceiptContext ctx);
-    protected abstract TModel TestData(Guid id, bool isDeleted);
+    protected abstract TModel TestData(bool isDeleted);
     private ReceiptContext SetupContext()
     {
         return new ReceiptContext();
@@ -24,12 +25,14 @@ public abstract class BaseRepositoryTests<TModel> where TModel : class, IDataMod
     public void TestGet()
     {
         var ctx = this.SetupContext();
-        this.AddData(ctx, this.TestData(Guid.Parse("7cb3db22-fa01-4b07-9a9d-9932a6e33130"), false));
-        this.AddData(ctx, this.TestData(Guid.Parse("4ee1bdbb-2686-492d-97d4-c99c226bb689"), true));
+        ctx.Set<TModel>() = new InternalDbSet<TModel>()
+        var testData1 = this.TestData(false);
+        this.AddData(ctx, testData1);
+        var testData2 = this.TestData(true);
+        this.AddData(ctx, testData2);
         var repository = this._repository(ctx);
 
-        var guid1 = Guid.Parse("7cb3db22-fa01-4b07-9a9d-9932a6e33130");
-        var result1 = repository.Get(guid1, false);
+        var result1 = repository.Get(testData1.Id, false);
         Assert.NotNull(result1);
         Assert.Equal(guid1, result1.Id);
         

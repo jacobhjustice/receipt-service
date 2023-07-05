@@ -20,7 +20,19 @@ public abstract class BaseRepository<TModel> : IRepository<TModel> where TModel 
 
     public void Add(TModel model)
     {
+        model.CreatedAt = DateTime.Now;
         this.Set.Add(model);
+        this._context.SaveChanges();
+    }
+
+    public void Add(ICollection<TModel> models)
+    {
+        foreach (var model in models)
+        {
+            model.CreatedAt = DateTime.Now;
+            this.Set.Add(model);
+        }
+        
         this._context.SaveChanges();
     }
 }

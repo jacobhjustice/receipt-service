@@ -1,5 +1,7 @@
 using FluentValidation;
 using Receipt.API.DTOs.Requests;
+using Receipt.API.DTOs.Responses;
+using Receipt.API.DTOs.ViewModels;
 using Receipt.Models.Storage.Repositories;
 
 namespace Receipt.API.Logic.Handlers;
@@ -19,7 +21,7 @@ public class ReceiptHandler
         this._processReceiptRequestValidator = processReceiptRequestValidator;
     }
 
-    public void Process(ProcessReceiptRequest request)
+    public IdResponse Process(ProcessReceiptRequest request)
     {
         if (request == null)
         {
@@ -32,41 +34,114 @@ public class ReceiptHandler
             throw new InvalidDataException();
         }
 
-        var date = DateOnly.Parse(request.PurchaseDate);                                                              
-        var time = TimeOnly.Parse(request.PurchaseTime);                                                              
-        var dt = new DateTime(date.Year, date.Month, date.Day, time.Hour, time.Minute, time.Second); 
+        var purchaseDate = DateOnly.Parse(request.PurchaseDate);                                                              
+        var purchaseTime = TimeOnly.Parse(request.PurchaseTime);                                                              
         
-        int pointTotal = 0;
-        pointTotal += request.Retailer.Count(char.IsLetterOrDigit);
-        
-        if (request.Total % 1 == 0)
+        int pointTotal = this.PointsForRetailer(request.Retailer);
+        pointTotal += this.PointsForReceiptTotal(request.Total);
+        pointTotal += this.PointsForReceiptItems(request.Items);
+        pointTotal += this.PointsForPurchaseDate(purchaseDate);
+        pointTotal += this.PointsForPurchaseTime(purchaseTime);
+
+        var receipt = new Models.Data.Receipt
         {
-            pointTotal += 50;
+            PointsAwarded = pointTotal,
+            Retailer = request.Retailer,
+            PurchasedAt = new DateTime(purchaseDate.Year, purchaseDate.Month, purchaseDate.Day,
+                purchaseTime.Hour, purchaseTime.Minute, purchaseTime.Second),
+            Total = request.Total,
+            CreatedAt = DateTime.Now,
+            DeletedAt = null
+        };
+        
+        this._receiptRepository.Add(receipt);
+        this._receiptItemRepository.Add(request.Items.Select(x => new Models.Data.ReceiptItem
+        {
+            ReceiptId = receipt.Id,
+            ShortDescription = x.ShortDescription,
+            Price = x.Price,
+            CreatedAt = DateTime.Now,
+            DeletedAt = null
+        }).ToList());
+
+        return new IdResponse
+        {
+            Id = receipt.Id
+        };
+    }
+    
+    private int PointsForRetailer(string retailer)
+    {
+        var points = 0;
+
+        // For every alphanumeric character in the retailer name, add 1 pt
+        points += retailer.Count(char.IsLetterOrDigit);
+
+        return points;
+    }
+
+    private int PointsForReceiptTotal(decimal receiptTotal)
+    {
+        var points = 0;
+        
+        // If the total is a round dollar amount, add 50 pts
+        if (receiptTotal % 1 == 0)
+        {
+            points += 50;
         }
 
-        if ((request.Total * 4) % 1 == 0)
+        // If the total is a multiple of 0.25, add 25 pts
+        if ((receiptTotal * 4) % 1 == 0)
         {
-            pointTotal += 25;
+            points += 25;
         }
 
-        pointTotal += (int) Math.Floor(request.Items.Count() / 2.0) * 5;
+        return points;
+    }
 
-        foreach (var item in request.Items)
+    private int PointsForReceiptItems(IList<ReceiptItemViewModel> receiptItems)
+    {
+        var points = 0;
+        
+        // For every two items on the receipt, add 5 pts
+        points += (int) Math.Floor(receiptItems.Count() / 2.0) * 5;
+
+        
+        // For all items with a description of length divisible by 3, add double the price as pts, rounded up
+        foreach (var item in receiptItems)
         {
             if (item.ShortDescription.Trim().Length % 3 == 0)
             {
-                pointTotal += (int) Math.Ceiling(item.Price * (decimal) 0.2);
+                points += (int) Math.Ceiling(item.Price * (decimal) 0.2);
             }
         }
+        
+        return points;
+    }
 
-        if (date.Day % 2 == 1)
+    private int PointsForPurchaseDate(DateOnly purchaseDate)
+    {
+        var points = 0;
+
+        // If the day is odd, add 6pts
+        if (purchaseDate.Day % 2 == 1)
         {
-            pointTotal += 6;
+            points += 6;
         }
 
-        if (time >= new TimeOnly(14, 0) && time <= new TimeOnly(16, 0))
+        return points;
+    }
+    
+    private int PointsForPurchaseTime(TimeOnly purchaseTime)
+    {
+        var points = 0;
+
+        // If the time is between 2:00 PM and 4:00 PM, add 10 pts
+        if (purchaseTime >= new TimeOnly(14, 0) && purchaseTime <= new TimeOnly(16, 0))
         {
-            pointTotal += 10;
+            points += 10;
         }
+
+        return points;
     }
 }
