@@ -16,6 +16,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Receipt.API.DTOs.Validators
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Receipt.API.DTOs.Validators.Tests", "Receipt.API.DTOs.Validators.Tests\Receipt.API.DTOs.Validators.Tests.csproj", "{2C015007-2191-4963-9C2D-A55BBBA223AB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Receipt.API.Logic.Tests", "Receipt.API.Logic.Tests\Receipt.API.Logic.Tests.csproj", "{9B06AE7E-A24F-4C73-9BA9-4EA9B3ED3C4C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -54,5 +56,9 @@ Global
 		{2C015007-2191-4963-9C2D-A55BBBA223AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2C015007-2191-4963-9C2D-A55BBBA223AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2C015007-2191-4963-9C2D-A55BBBA223AB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9B06AE7E-A24F-4C73-9BA9-4EA9B3ED3C4C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9B06AE7E-A24F-4C73-9BA9-4EA9B3ED3C4C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9B06AE7E-A24F-4C73-9BA9-4EA9B3ED3C4C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9B06AE7E-A24F-4C73-9BA9-4EA9B3ED3C4C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

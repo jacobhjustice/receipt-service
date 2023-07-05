@@ -131,7 +131,7 @@ public class ProcessReceiptRequestValidatorTests
             Items = itemPrices.Select(x => 
                 new ReceiptItemViewModel
                 {
-                    Price = (decimal?) x
+                    Price = (decimal) x
                 }).ToList()
         });
         

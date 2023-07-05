@@ -6,4 +6,6 @@ public class ReceiptItem : IDataModel
     public Guid ReceiptId { get; set; }
     public string ShortDescription { get; set; }
     public Decimal Price { get; set; }
+    public DateTime CreatedAt { get; set; }
+    public DateTime? DeletedAt { get; set; }
 }

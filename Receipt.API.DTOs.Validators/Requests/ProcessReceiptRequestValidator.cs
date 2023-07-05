@@ -23,7 +23,7 @@ public class ProcessReceiptRequestValidator : AbstractValidator<ProcessReceiptRe
             .GreaterThan(0)
             .Must((receipt, total) =>
             {
-                return (total ?? -1) == (receipt.Items?.Sum(x => x?.Price ?? 0) ?? 0);
+                return total == (receipt.Items?.Sum(x => x?.Price ?? 0));
             });
 
         RuleFor(x => x.Retailer)

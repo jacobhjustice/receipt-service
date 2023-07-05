@@ -13,9 +13,9 @@ public abstract class BaseRepository<TModel> : IRepository<TModel> where TModel 
         this._context = ctx;
     }
     
-    public TModel? Get(Guid id)
+    public TModel? Get(Guid id, bool allowDeleted = false)
     {
-        return this.Set.FirstOrDefault(x => x.Id == id);
+        return this.Set.FirstOrDefault(x => x.Id == id && (allowDeleted || x.DeletedAt == null));
     }
 
     public void Add(TModel model)
