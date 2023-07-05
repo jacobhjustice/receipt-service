@@ -9,7 +9,7 @@ public class ProcessReceiptRequestValidator : AbstractValidator<ProcessReceiptRe
     public ProcessReceiptRequestValidator(IValidator<ReceiptItemViewModel> receiptItemValidator)
     {
         RuleFor(x => x.Items)
-            .NotNull()
+            .NotEmpty()
             .DependentRules(() =>
             {
                 RuleForEach(x => x.Items)
@@ -23,15 +23,26 @@ public class ProcessReceiptRequestValidator : AbstractValidator<ProcessReceiptRe
             .GreaterThan(0)
             .Must((receipt, total) =>
             {
-                return (total ?? -1) == (receipt.Items?.Sum(x => x.Price ?? 0) ?? 0);
+                return (total ?? -1) == (receipt.Items?.Sum(x => x?.Price ?? 0) ?? 0);
             });
 
         RuleFor(x => x.Retailer)
             .NotEmpty();
 
         RuleFor(x => x.PurchaseDate)
-            .NotEmpty(); // TODO: Validate Date
+            .NotEmpty()
+            .Must(dateString =>
+            {
+                DateOnly date;
+                return DateOnly.TryParse(dateString, out date);
+            });
+        
         RuleFor(x => x.PurchaseTime)
-            .NotEmpty(); // TODO: Validate Time
+            .NotEmpty()
+            .Must(timeString =>
+            {
+                TimeOnly time;
+                return TimeOnly.TryParse(timeString, out time);
+            });
     }
 }
