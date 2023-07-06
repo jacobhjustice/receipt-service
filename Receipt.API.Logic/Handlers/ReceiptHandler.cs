@@ -20,7 +20,7 @@ public class ReceiptHandler
         this._receiptItemRepository = receiptItemRepository;
         this._processReceiptRequestValidator = processReceiptRequestValidator;
     }
-
+    
     public IdResponse Process(ProcessReceiptRequest request)
     {
         if (request == null)

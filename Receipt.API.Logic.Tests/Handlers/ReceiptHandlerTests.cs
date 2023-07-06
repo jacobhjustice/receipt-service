@@ -2,6 +2,7 @@ using FluentValidation;
 using FluentValidation.Results;
 using Moq;
 using Receipt.API.DTOs.Requests;
+using Receipt.API.DTOs.ViewModels;
 using Receipt.API.Logic.Handlers;
 using Receipt.Models.Storage.Repositories;
 using Xunit;
@@ -37,5 +38,84 @@ public class ReceiptHandlerTests
         this._processReceiptRequestValidator.Setup(x => x.Validate(request))
             .Returns(new ValidationResult(new List<ValidationFailure>() {new ValidationFailure()}));
         Assert.Throws<InvalidDataException>(() => _handler().Process(request));
+    }
+    
+    [Theory]
+    [InlineData(
+        "Target",
+        35.35, 
+        "13:01", 
+        "2022-01-01", 
+        new string[]
+        {
+            "Mountain Dew 12PK",
+            "Emils Cheese Pizza",
+            "Knorr Creamy Chicken",
+            "Doritos Nacho Cheese",
+            "   Klarbrunn 12-PK 12 FL OZ  ",
+        }, 
+        new double[]
+        {
+            6.49,
+            12.25,
+            1.26,
+            3.35,
+            12.00
+        }, 
+        28
+    )]
+    [InlineData(
+        "M&M Corner Market",
+        9, 
+        "14:33", 
+        "2022-03-20", 
+        new string[]
+        {
+            "Gatorade",
+            "Gatorade",
+            "Gatorade",
+            "Gatorade",
+        }, 
+        new double[]
+        {
+            2.25,
+            2.25,
+            2.25,
+            2.25,
+        }, 
+        109
+    )]
+    public void ProcessTestSuccess(string retailer, decimal total, string purchaseTime, string purchaseDate, string[] itemShortDescriptions, double[] itemPrices, int expectedPoints)
+    {
+        var receiptItems = new List<ReceiptItemViewModel>();
+        for (var i = 0; i < itemPrices.Length; i++)
+        {
+            receiptItems.Add(new ReceiptItemViewModel{ShortDescription = itemShortDescriptions[i], Price = (decimal)itemPrices[i]});
+        }
+
+        var request = new ProcessReceiptRequest
+        {
+            Retailer = retailer,
+            Total = total,
+            PurchaseTime = purchaseTime,
+            PurchaseDate = purchaseDate,
+            Items = receiptItems
+        };
+        this._processReceiptRequestValidator.Setup(x => x.Validate(request))
+            .Returns(new ValidationResult());
+
+        var expectedGuid = Guid.NewGuid();
+        this._receiptRepository.Setup(x => x.Add(It.IsAny<Models.Data.Receipt>()))
+            .Callback<Models.Data.Receipt>(x => x.Id = expectedGuid);
+        
+        var result = _handler().Process(request);
+        this._receiptRepository.Verify(x => x.Add(It.Is<Models.Data.Receipt>(y => 
+            y.Id == expectedGuid && y.Retailer == retailer && y.Total == total && y.PointsAwarded == expectedPoints && TimeOnly.FromDateTime(y.PurchasedAt) == TimeOnly.Parse(purchaseTime) && DateOnly.FromDateTime(y.PurchasedAt) == DateOnly.Parse(purchaseDate) 
+        )), Times.Once);
+        this._receiptItemRepository.Verify(x => x.Add(It.Is<IList<Models.Data.ReceiptItem>>(y => 
+            y.Count == itemPrices.Length && y.All(z => z.ReceiptId == expectedGuid)
+        )), Times.Once);
+        Assert.NotNull(result);
+        Assert.Equal(expectedGuid, result.Id);
     }
 }
