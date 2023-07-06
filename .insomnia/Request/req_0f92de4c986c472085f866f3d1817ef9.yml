@@ -1,0 +1,49 @@
+_id: req_0f92de4c986c472085f866f3d1817ef9
+type: Request
+parentId: wrk_ad6a68bed3954e598fea18d7997cc2eb
+modified: 1688618740940
+created: 1688618577989
+url: "{{ _.host }}/receipts/process"
+name: Process Receipt
+description: ""
+method: POST
+body:
+  mimeType: application/json
+  text: |-
+    {
+      "retailer": "Target",
+      "purchaseDate": "2022-01-01",
+      "purchaseTime": "13:01",
+      "items": [
+        {
+          "shortDescription": "Mountain Dew 12PK",
+          "price": "6.49"
+        },{
+          "shortDescription": "Emils Cheese Pizza",
+          "price": "12.25"
+        },{
+          "shortDescription": "Knorr Creamy Chicken",
+          "price": "1.26"
+        },{
+          "shortDescription": "Doritos Nacho Cheese",
+          "price": "3.35"
+        },{
+          "shortDescription": "   Klarbrunn 12-PK 12 FL OZ  ",
+          "price": "12.00"
+        }
+      ],
+      "total": "35.35"
+    }
+parameters: []
+headers:
+  - name: Content-Type
+    value: application/json
+authentication: {}
+metaSortKey: -1688618272446
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global
