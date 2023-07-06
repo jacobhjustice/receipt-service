@@ -16,4 +16,4 @@ The following assumptions were made from the requirements:
 - Install [Docker](https://www.docker.com/)
 - From the repository root, run the following commands:
   - `docker build -f Receipt.API/Dockerfile --tag jj-receiptz .`
-  - `docker run -p 80:80 --detach receiptz `
+  - `docker run -p 1997:80 --detach jj-receiptz `
