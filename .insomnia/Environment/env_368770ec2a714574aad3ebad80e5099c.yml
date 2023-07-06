@@ -1,0 +1,14 @@
+_id: env_368770ec2a714574aad3ebad80e5099c
+type: Environment
+parentId: env_0751009444fc9503c42f0ff57f1e17e732a95262
+modified: 1688618560419
+created: 1688618246012
+name: Local Environment
+data:
+  host: https://localhost:8000
+dataPropertyOrder:
+  "&":
+    - host
+color: null
+isPrivate: false
+metaSortKey: 1688618246012

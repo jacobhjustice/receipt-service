@@ -1,0 +1,9 @@
+_id: wrk_ad6a68bed3954e598fea18d7997cc2eb
+type: Workspace
+parentId: null
+modified: 1688618200456
+created: 1688618200456
+name: receipt-service.git
+description: Insomnia Workspace for
+  git+https://github.com/jacobhjustice/receipt-service.git}
+scope: design
