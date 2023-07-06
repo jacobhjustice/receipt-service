@@ -25,7 +25,6 @@ public abstract class BaseRepositoryTests<TModel> where TModel : class, IDataMod
     public void TestGet()
     {
         var ctx = this.SetupContext();
-        ctx.Set<TModel>() = new InternalDbSet<TModel>()
         var testData1 = this.TestData(false);
         this.AddData(ctx, testData1);
         var testData2 = this.TestData(true);
@@ -34,16 +33,15 @@ public abstract class BaseRepositoryTests<TModel> where TModel : class, IDataMod
 
         var result1 = repository.Get(testData1.Id, false);
         Assert.NotNull(result1);
-        Assert.Equal(guid1, result1.Id);
+        Assert.Equal(testData1.Id, result1.Id);
         
-        var guid2 = Guid.Parse("4ee1bdbb-2686-492d-97d4-c99c226bb689");
-        var result2 = repository.Get(guid2, false);
+        var result2 = repository.Get(testData2.Id, false);
         Assert.Null(result2);
-        result2 = repository.Get(guid2, true);
+        result2 = repository.Get(testData2.Id, true);
         Assert.NotNull(result1);
-        Assert.Equal(guid2, result2.Id);
+        Assert.Equal(testData2.Id, result2.Id);
         
-        var guid3 = Guid.Parse("b4304ade-b861-4048-bb58-e1e216a5e10c");
+        var guid3 = Guid.Empty;
         var result3 = repository.Get(guid3, false);
         Assert.Null(result3);
     }
@@ -52,7 +50,32 @@ public abstract class BaseRepositoryTests<TModel> where TModel : class, IDataMod
     public void TestAdd()
     {
         var ctx = this.SetupContext();
-        this._repository(ctx).Add(this.TestData(Guid.NewGuid(), false));
+        var data = this.TestData(false);
+        var preExeDate = DateTime.Now;
+        this._repository(ctx).Add(data);
+        var postExeDate = DateTime.Now;
         Assert.Equal(1, ctx.Set<TModel>().Count());
+        Assert.True(data.CreatedAt > preExeDate && data.CreatedAt < postExeDate);
+        Assert.NotEqual(data.Id, Guid.Empty);
+    }
+
+    [Fact]
+    public void TestAddRange()
+    {
+        var ctx = this.SetupContext();
+        var data = new List<TModel>
+        {
+            this.TestData(false),
+            this.TestData(false)
+        };
+        var preExeDate = DateTime.Now;
+        this._repository(ctx).Add(data);
+        var postExeDate = DateTime.Now;
+        Assert.Equal(2, ctx.Set<TModel>().Count());
+        foreach (var model in data)
+        {
+            Assert.True(model.CreatedAt > preExeDate && model.CreatedAt < postExeDate);
+            Assert.NotEqual(model.Id, Guid.Empty);
+        }
     }
 }

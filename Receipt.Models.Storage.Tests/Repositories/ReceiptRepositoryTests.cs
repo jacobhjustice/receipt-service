@@ -6,9 +6,8 @@ public class ReceiptRepositoryTests : BaseRepositoryTests<Data.Receipt>
 {
     protected override BaseRepository<Data.Receipt> _repository(ReceiptContext ctx) => new ReceiptRepository(ctx);
 
-    protected override Data.Receipt TestData(Guid id, bool isDeleted) => new Data.Receipt
+    protected override Data.Receipt TestData(bool isDeleted) => new Data.Receipt
     {
-        Id = id,
         Retailer = "",
         DeletedAt = isDeleted ? DateTime.Now : null,
         PointsAwarded = 123,

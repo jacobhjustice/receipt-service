@@ -10,7 +10,7 @@ public class ReceiptContext : DbContext
     protected override void OnConfiguring
         (DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseInMemoryDatabase(databaseName: "receipts");
+        optionsBuilder.UseInMemoryDatabase(Guid.NewGuid().ToString());
     }
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
