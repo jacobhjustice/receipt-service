@@ -13,6 +13,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Receipt.API.DTOs\Receipt.API.DTOs.csproj" />
+      <ProjectReference Include="..\Receipt.API.Logic\Receipt.API.Logic.csproj" />
     </ItemGroup>
 
 </Project>

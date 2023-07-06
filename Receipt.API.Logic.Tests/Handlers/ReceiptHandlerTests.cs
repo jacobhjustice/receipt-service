@@ -26,6 +26,24 @@ public class ReceiptHandlerTests
         this._receiptItemRepository.Object, this._processReceiptRequestValidator.Object);
     
     [Fact]
+    public void GetTestFailure_Null()
+    {
+        this._receiptRepository.Setup(x => x.Get(It.IsAny<Guid>(), false)).Returns<Models.Data.Receipt>(null);
+        Assert.Throws<KeyNotFoundException>(() => _handler().Get(Guid.NewGuid()));
+    }
+    
+    [Fact]
+    public void GetTestSuccess()
+    {
+        var guid = Guid.NewGuid();
+        var expectedResult = new Models.Data.Receipt();
+        this._receiptRepository.Setup(x => x.Get(guid, false)).Returns(expectedResult);
+        var result = _handler().Get(guid);
+        Assert.NotNull(result);
+        Assert.Equal(expectedResult, result);
+    }
+    
+    [Fact]
     public void ProcessTestFailure_Null()
     {
         Assert.Throws<ArgumentNullException>(() => _handler().Process(null));
@@ -109,13 +127,16 @@ public class ReceiptHandlerTests
             .Callback<Models.Data.Receipt>(x => x.Id = expectedGuid);
         
         var result = _handler().Process(request);
-        this._receiptRepository.Verify(x => x.Add(It.Is<Models.Data.Receipt>(y => 
-            y.Id == expectedGuid && y.Retailer == retailer && y.Total == total && y.PointsAwarded == expectedPoints && TimeOnly.FromDateTime(y.PurchasedAt) == TimeOnly.Parse(purchaseTime) && DateOnly.FromDateTime(y.PurchasedAt) == DateOnly.Parse(purchaseDate) 
-        )), Times.Once);
+        this._receiptRepository.Verify(x => x.Add(result), Times.Once);
         this._receiptItemRepository.Verify(x => x.Add(It.Is<IList<Models.Data.ReceiptItem>>(y => 
             y.Count == itemPrices.Length && y.All(z => z.ReceiptId == expectedGuid)
         )), Times.Once);
         Assert.NotNull(result);
         Assert.Equal(expectedGuid, result.Id);
+        Assert.Equal(retailer, result.Retailer);
+        Assert.Equal(total, result.Total);
+        Assert.Equal(expectedPoints, result.PointsAwarded);
+        Assert.Equal(TimeOnly.Parse(purchaseTime), TimeOnly.FromDateTime(result.PurchasedAt));
+        Assert.Equal(DateOnly.Parse(purchaseDate), DateOnly.FromDateTime(result.PurchasedAt));
     }
 }

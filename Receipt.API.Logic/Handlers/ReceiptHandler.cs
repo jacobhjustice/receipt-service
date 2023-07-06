@@ -6,7 +6,7 @@ using Receipt.Models.Storage.Repositories;
 
 namespace Receipt.API.Logic.Handlers;
 
-public class ReceiptHandler
+public class ReceiptHandler : IReceiptHandler
 {
     private readonly IRepository<Models.Data.Receipt> _receiptRepository;
     private readonly IRepository<Models.Data.ReceiptItem> _receiptItemRepository;
@@ -20,8 +20,19 @@ public class ReceiptHandler
         this._receiptItemRepository = receiptItemRepository;
         this._processReceiptRequestValidator = processReceiptRequestValidator;
     }
-    
-    public IdResponse Process(ProcessReceiptRequest request)
+
+    public Models.Data.Receipt Get(Guid receiptId)
+    {
+        var receipt = this._receiptRepository.Get(receiptId);
+        if (receipt == null)
+        {
+            throw new KeyNotFoundException();
+        }
+
+        return receipt;
+    }
+
+    public Models.Data.Receipt Process(ProcessReceiptRequest request)
     {
         if (request == null)
         {
@@ -64,10 +75,7 @@ public class ReceiptHandler
             DeletedAt = null
         }).ToList());
 
-        return new IdResponse
-        {
-            Id = receipt.Id
-        };
+        return receipt;
     }
     
     private int PointsForRetailer(string retailer)
