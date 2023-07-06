@@ -11,3 +11,9 @@ The following assumptions were made from the requirements:
 - User data is not tracked in any form
 - The API does not handle any authentication or authorization
 - This solution does not compose multiple microservices, but rather a single receipt service that would potentially be a part of a larger system
+
+### Running the service
+- Install [Docker](https://www.docker.com/)
+- From the repository root, run the following commands:
+  - `docker build -f Receipt.API/Dockerfile --tag jj-receiptz .`
+  - `docker run -p 80:80 --detach receiptz `
