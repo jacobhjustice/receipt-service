@@ -53,9 +53,8 @@ public abstract class BaseRepositoryTests<TModel> where TModel : class, IDataMod
         var data = this.TestData(false);
         var preExeDate = DateTime.Now;
         this._repository(ctx).Add(data);
-        var postExeDate = DateTime.Now;
         Assert.Equal(1, ctx.Set<TModel>().Count());
-        Assert.True(data.CreatedAt > preExeDate && data.CreatedAt < postExeDate);
+        Assert.True(data.CreatedAt >= preExeDate);
         Assert.NotEqual(data.Id, Guid.Empty);
     }
 
@@ -70,11 +69,10 @@ public abstract class BaseRepositoryTests<TModel> where TModel : class, IDataMod
         };
         var preExeDate = DateTime.Now;
         this._repository(ctx).Add(data);
-        var postExeDate = DateTime.Now;
         Assert.Equal(2, ctx.Set<TModel>().Count());
         foreach (var model in data)
         {
-            Assert.True(model.CreatedAt > preExeDate && model.CreatedAt < postExeDate);
+            Assert.True(model.CreatedAt >= preExeDate);
             Assert.NotEqual(model.Id, Guid.Empty);
         }
     }

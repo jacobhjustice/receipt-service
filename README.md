@@ -15,5 +15,7 @@ The following assumptions were made from the requirements:
 ### Running the service
 - Install [Docker](https://www.docker.com/)
 - From the repository root, run the following commands:
-  - `docker build -f Receipt.API/Dockerfile --tag jj-receiptz .`
-  - `docker run -p 1997:80 --detach jj-receiptz `
+  - `docker build -f Receipt.API/Dockerfile --tag jj-receipt-service .`
+  - `docker run -p 1997:80 --detach jj-receipt-service`
+- Use an http service to test the endpoints
+  - [Insomnia](https://insomnia.rest/) files are provided in the repository for convenience
