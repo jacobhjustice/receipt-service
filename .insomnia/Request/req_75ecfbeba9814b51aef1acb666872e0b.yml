@@ -1,7 +1,7 @@
 _id: req_75ecfbeba9814b51aef1acb666872e0b
 type: Request
 parentId: wrk_ad6a68bed3954e598fea18d7997cc2eb
-modified: 1688619159440
+modified: 1688622631109
 created: 1688618691054
 url: "{{ _.host }}/receipts/{ID}/points"
 name: Receipt Points
