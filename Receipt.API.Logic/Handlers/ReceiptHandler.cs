@@ -1,6 +1,5 @@
 using FluentValidation;
 using Receipt.API.DTOs.Requests;
-using Receipt.API.DTOs.Responses;
 using Receipt.API.DTOs.ViewModels;
 using Receipt.Models.Storage.Repositories;
 
